@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1a2340;--navy2:#243055;--teal:#00897b;--teal2:#00bfa5;
+  --gold:#f9a825;--cream:#fdf8f0;--cream2:#f5ede0;
+  --red:#e53935;--green:#43a047;--orange:#fb8c00;
+  --text:#1a2340;--muted:#607d8b;--border:#e0d8cc;
+  --white:#fff;--sidebar-w:224px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column;font-size:13.5px}
+h1,h2,h3,.brand-name{font-family:'Playfair Display',serif}
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--navy);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.content{padding:1.5rem;flex:1}
+.brand{padding:1.25rem 1.25rem 0.875rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.brand-name{color:#fff;font-size:1.3rem}
+.brand-tag{color:var(--teal2);font-size:10px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;margin-top:2px}
+.nav-section{padding:0.875rem 0.75rem 0.4rem;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;font-weight:500}
+.nav-item{display:flex;align-items:center;gap:9px;padding:0.55rem 1.25rem;color:rgba(255,255,255,0.58);cursor:pointer;transition:all 0.12s;font-size:13px;border-left:3px solid transparent}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.06)}
+.nav-item.active{color:#fff;background:rgba(0,191,165,0.14);border-left-color:var(--teal2)}
+.nav-item i{width:16px;font-size:13px;text-align:center}
+.nav-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:auto}
+
+.page-title{font-size:1rem;font-weight:600;color:var(--navy)}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.25rem}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.1rem;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.blue::before{background:var(--navy)}
+.stat-card.teal::before{background:var(--teal)}
+.stat-card.gold::before{background:var(--gold)}
+.stat-card.red::before{background:var(--red)}
+.stat-card.green::before{background:var(--green)}
+.stat-card.orange::before{background:var(--orange)}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+.stat-value{font-size:1.75rem;font-weight:600;color:var(--text);line-height:1.2;margin:0.2rem 0}
+.stat-sub{font-size:11px;color:var(--muted)}
+
+.card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:1.25rem}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-title{font-size:0.95rem;font-weight:600;color:var(--navy)}
+
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--cream2)}
+th{padding:0.65rem 0.875rem;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:0.65rem 0.875rem;border-bottom:1px solid #f0ebe3;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdf5e8}
+tfoot td{background:var(--cream2);font-weight:600;border-top:1px solid var(--border)}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.badge-green{background:#e8f5e9;color:#1b5e20}
+.badge-red{background:#ffebee;color:#b71c1c}
+.badge-gold{background:#fff8e1;color:#e65100}
+.badge-blue{background:#e3f2fd;color:#0d47a1}
+.badge-navy{background:#e8eaf6;color:#1a237e}
+.badge-orange{background:#fff3e0;color:#bf360c}
+.badge-purple{background:#f3e5f5;color:#4a148c}
+.badge-teal{background:#e0f2f1;color:#004d40}
+
+.btn{display:inline-flex;align-items:center;gap:5px;padding:0.5rem 1.1rem;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.12s}
+.btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:var(--teal2)}
+.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy2)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-warning{background:var(--orange);color:#fff}
+.btn-sm{padding:0.3rem 0.75rem;font-size:12px}
+
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.25rem}
+.tab{padding:0.65rem 1.1rem;cursor:pointer;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.12s;font-weight:500}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.875rem}
+.form-group{display:flex;flex-direction:column;gap:0.35rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em}
+input,select,textarea{border:1px solid var(--border);border-radius:8px;padding:0.55rem 0.8rem;font-family:inherit;font-size:13px;color:var(--text);background:#fff;outline:none;transition:border 0.12s}
+input:focus,select:focus,textarea:focus{border-color:var(--teal)}
+textarea{resize:vertical;min-height:70px}
+
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.pill{display:inline-block;background:var(--cream2);border-radius:20px;padding:2px 10px;font-size:11px;color:var(--muted);border:1px solid var(--border)}
+.progress-bar{height:5px;background:var(--cream2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--teal)}
+.alert{border-radius:8px;padding:0.75rem 1rem;font-size:13px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:9px}
+.alert-info{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
+.alert-warn{background:#fff8e1;color:#e65100;border:1px solid #ffcc02}
+.alert-danger{background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a}
+.alert-success{background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(26,35,64,0.55);z-index:999;display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:16px;padding:1.75rem;width:580px;max-width:96vw;max-height:90vh;overflow-y:auto;position:relative}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.modal-title{font-size:1rem;font-weight:600;color:var(--navy)}
+.modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);padding:4px}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:6px;cursor:pointer;font-weight:500}
+.cal-day:hover{background:var(--cream2)}
+.cal-day.holiday{background:#ffebee;color:#b71c1c}
+.cal-day.sunday{background:#f3e5f5;color:#4a148c}
+.cal-day.today{background:var(--navy);color:#fff}
+.cal-day.other-month{color:var(--muted);opacity:0.4}
+.cal-day.leave-cl{background:#e3f2fd;color:#0d47a1}
+.cal-day.leave-sl{background:#e8f5e9;color:#1b5e20}
+.cal-day.leave-lwp{background:#fff8e1;color:#e65100}
+.cal-day.leave-ml{background:#fce4ec;color:#880e4f}
+
+.eff-bar{height:28px;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:700;color:#fff;transition:width 0.3s}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="brand-name">Cottony</div>
+    <div class="brand-tag">HRM v2 · Tirupur</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:1rem">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="navigate('dashboard')"><i class="fa fa-th-large"></i> Dashboard</div>
+    <div class="nav-section">Workforce</div>
+    <div class="nav-item" onclick="navigate('employees')"><i class="fa fa-users"></i> Staff (20)</div>
+    <div class="nav-item" onclick="navigate('contract')"><i class="fa fa-people-group"></i> Contract (60)</div>
+    <div class="nav-item" onclick="navigate('skills')"><i class="fa fa-layer-group"></i> Skill Matrix</div>
+    <div class="nav-section">Daily Ops</div>
+    <div class="nav-item" onclick="navigate('attendance')"><i class="fa fa-clock"></i> Attendance</div>
+    <div class="nav-item" onclick="navigate('leaves')"><i class="fa fa-calendar-minus"></i> Leave Manager <span class="nav-badge" id="pending-badge">0</span></div>
+    <div class="nav-item" onclick="navigate('holidays')"><i class="fa fa-calendar-star"></i> Holiday Calendar</div>
+    <div class="nav-item" onclick="navigate('production')"><i class="fa fa-industry"></i> Production Tracker</div>
+    <div class="nav-item" onclick="navigate('piecerate')"><i class="fa fa-scissors"></i> Piece Rate Entry</div>
+    <div class="nav-section">Finance</div>
+    <div class="nav-item" onclick="navigate('payroll')"><i class="fa fa-money-bill-wave"></i> Payroll</div>
+    <div class="nav-item" onclick="navigate('compliance')"><i class="fa fa-shield-halved"></i> Compliance</div>
+    <div class="nav-section">Reports</div>
+    <div class="nav-item" onclick="navigate('reports')"><i class="fa fa-chart-bar"></i> Reports</div>
+  </div>
+  <div style="padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,0.08)">
+    <div style="font-size:10px;color:rgba(255,255,255,0.3)">Logged in as</div>
+    <div style="font-size:13px;color:#fff;margin-top:2px;font-weight:500">HR Manager</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <span style="font-size:12px;color:var(--muted)" id="today-date"></span>
+      <div class="avatar">HR</div>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<script>
+const today = new Date(2026,5,8);
+const thisMonth = '2026-06';
+const thisMonthName = today.toLocaleString('en-IN',{month:'long',year:'numeric'});
+document.getElementById('today-date').textContent = today.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+const TN_HOLIDAYS_2026 = [
+  {date:'2026-01-01',name:'New Year',type:'national'},
+  {date:'2026-01-14',name:'Pongal',type:'tamil'},
+  {date:'2026-01-15',name:'Thiruvalluvar Day',type:'tamil'},
+  {date:'2026-01-16',name:'Uzhavar Thirunal',type:'tamil'},
+  {date:'2026-01-26',name:'Republic Day',type:'national'},
+  {date:'2026-04-01',name:'Good Friday',type:'religious'},
+  {date:'2026-04-14',name:'Tamil New Year / Ambedkar Jayanti',type:'tamil'},
+  {date:'2026-05-01',name:'May Day',type:'national'},
+  {date:'2026-06-17',name:'Eid al-Adha',type:'religious'},
+  {date:'2026-08-15',name:'Independence Day',type:'national'},
+  {date:'2026-08-22',name:'Vinayagar Chaturthi',type:'religious'},
+  {date:'2026-10-02',name:'Gandhi Jayanti',type:'national'},
+  {date:'2026-10-20',name:'Diwali',type:'religious'},
+  {date:'2026-10-21',name:'Diwali Holiday',type:'religious'},
+  {date:'2026-11-04',name:'Muharram',type:'religious'},
+  {date:'2026-11-14',name:'Kalaignar Memorial Day',type:'tamil'},
+  {date:'2026-12-25',name:'Christmas',type:'religious'},
+];
+
+const LEAVE_TYPES = {
+  CL:{label:'Casual Leave',short:'CL',max:12,color:'badge-blue'},
+  SL:{label:'Sick Leave',short:'SL',max:12,color:'badge-green'},
+  EL:{label:'Earned Leave',short:'EL',max:18,color:'badge-teal'},
+  ML:{label:'Maternity Leave',short:'ML',max:182,color:'badge-purple'},
+  LWP:{label:'Leave Without Pay',short:'LWP',max:999,color:'badge-gold'},
+};
+
+const PRODUCTION_LINES = ['Line A – Stitching','Line B – Hemming','Line C – Cutting','Line D – Finishing'];
+const DAILY_TARGETS = {'Line A – Stitching':400,'Line B – Hemming':350,'Line C – Cutting':300,'Line D – Finishing':280};
+
+const state = {
+  employees: [
+    {id:'E001',name:'Arumugam K',dept:'Production',role:'Cutting Master',salary:18000,phone:'9876543210',joined:'2019-06-15',status:'active',gender:'M',line:'Line C – Cutting'},
+    {id:'E002',name:'Selvi R',dept:'Quality',role:'QC Supervisor',salary:16500,phone:'9876501234',joined:'2020-03-10',status:'active',gender:'F',line:null},
+    {id:'E003',name:'Ramesh B',dept:'Finishing',role:'Ironing Head',salary:15000,phone:'9000111222',joined:'2018-11-01',status:'active',gender:'M',line:'Line D – Finishing'},
+    {id:'E004',name:'Kavitha M',dept:'Admin',role:'HR Coordinator',salary:14000,phone:'9123456780',joined:'2021-01-20',status:'active',gender:'F',line:null},
+    {id:'E005',name:'Suresh P',dept:'Production',role:'Machine Operator',salary:13500,phone:'9988776655',joined:'2022-07-05',status:'active',gender:'M',line:'Line A – Stitching'},
+    {id:'E006',name:'Muthulakshmi A',dept:'Production',role:'Senior Tailor',salary:15500,phone:'9876543299',joined:'2020-09-14',status:'active',gender:'F',line:'Line A – Stitching'},
+    {id:'E007',name:'Karthik N',dept:'Dispatch',role:'Logistics',salary:13000,phone:'9123456709',joined:'2023-02-01',status:'active',gender:'M',line:null},
+    {id:'E008',name:'Priya S',dept:'Design',role:'Pattern Maker',salary:17000,phone:'9000222333',joined:'2021-05-11',status:'active',gender:'F',line:null},
+    {id:'E009',name:'Vijay C',dept:'Accounts',role:'Accountant',salary:16000,phone:'9001112223',joined:'2019-12-01',status:'active',gender:'M',line:null},
+    {id:'E010',name:'Lakshmi D',dept:'Quality',role:'QC Inspector',salary:13500,phone:'9900334455',joined:'2022-03-18',status:'active',gender:'F',line:null},
+    {id:'E011',name:'Murugesan T',dept:'Production',role:'Fabric Store',salary:13000,phone:'9876012345',joined:'2020-11-22',status:'active',gender:'M',line:null},
+    {id:'E012',name:'Saranya V',dept:'Admin',role:'Office Manager',salary:15000,phone:'9123005670',joined:'2018-08-30',status:'active',gender:'F',line:null},
+    {id:'E013',name:'Balamurugan G',dept:'Production',role:'Supervisor',salary:17500,phone:'9765432100',joined:'2017-04-10',status:'active',gender:'M',line:'Line B – Hemming'},
+    {id:'E014',name:'Deepa M',dept:'Finishing',role:'Packing Head',salary:13500,phone:'9000123456',joined:'2021-09-01',status:'active',gender:'F',line:'Line D – Finishing'},
+    {id:'E015',name:'Anand R',dept:'Production',role:'Machine Mechanic',salary:14500,phone:'9898989898',joined:'2020-07-15',status:'active',gender:'M',line:null},
+    {id:'E016',name:'Nithya K',dept:'Design',role:'Embroidery Head',salary:15000,phone:'9876000111',joined:'2022-01-12',status:'active',gender:'F',line:null},
+    {id:'E017',name:'Ganesan L',dept:'Dispatch',role:'Driver',salary:12000,phone:'9000567890',joined:'2019-03-20',status:'active',gender:'M',line:null},
+    {id:'E018',name:'Meena P',dept:'Quality',role:'QC – Measurement',salary:13000,phone:'9876543111',joined:'2023-06-01',status:'active',gender:'F',line:null},
+    {id:'E019',name:'Siva S',dept:'Accounts',role:'Jr Accountant',salary:12500,phone:'9876543100',joined:'2023-08-01',status:'active',gender:'M',line:null},
+    {id:'E020',name:'Pooja T',dept:'Admin',role:'Receptionist',salary:11500,phone:'9876543000',joined:'2023-10-01',status:'active',gender:'F',line:null},
+  ],
+  contractWorkers: Array.from({length:60},(_,i)=>{
+    const names=['Rajammal S','Pandi K','Valli M','Chellapan R','Thankam V','Muthu G','Kamala D','Rajan B','Sumathi P','Durai N','Malathi C','Sundar M','Pushpa L','Gopal S','Vasantha K','Alagappan R','Revathi M','Kumar T','Usha B','Sekar N','Meenakshi P','Palani G','Saraswathi V','Murugan K','Kannagi R','Selvam D','Parvathi S','Arjunan M','Nagalakshmi R','Velan K','Thilaga N','Ramachandran S','Kalaivani M','Murali B','Bhavani P','Sridhar K','Jeyalakshmi R','Balakrishnan N','Tamilarasi V','Shankar M','Padmavathi K','Elumalai R','Geetha S','Ravi T','Chandra M','Palanivel K','Umamaheswari R','Dinesh S','Rajalakshmi N','Arun K','Saroja M','Periyasamy R','Ambika V','Manikandan K','Rukmani S','Nandakumar M','Vimala P','Saravanan R','Meenalochani K','Ilayaraja S'];
+    const skills=['Stitching','Hemming','Cutting','Neck Stitching','Button Fixing','Labelling','Ironing','Packing'];
+    const skill=skills[i%skills.length];
+    return {id:'C'+String(i+1).padStart(3,'0'),name:names[i]||'Worker '+(i+1),skill,phone:'98'+String(Math.floor(Math.random()*100000000)).padStart(8,'0'),status:'active',gender:i%3===0?'M':'F'};
+  }),
+  pieceRates:{'Stitching':2.5,'Hemming':1.8,'Cutting':3.0,'Neck Stitching':3.5,'Button Fixing':1.2,'Labelling':0.8,'Ironing':1.5,'Packing':1.0},
+  attendance:{},
+  pieceEntries:{},
+  leaveRequests:[
+    {id:'LR001',empId:'E006',empName:'Muthulakshmi A',type:'ML',from:'2026-07-01',to:'2026-12-31',days:184,reason:'Maternity leave',status:'approved',appliedOn:'2026-06-01'},
+    {id:'LR002',empId:'E005',empName:'Suresh P',type:'CL',from:'2026-06-10',to:'2026-06-11',days:2,reason:'Personal work',status:'pending',appliedOn:'2026-06-05'},
+    {id:'LR003',empId:'E003',empName:'Ramesh B',type:'SL',from:'2026-06-07',to:'2026-06-08',days:2,reason:'Fever',status:'approved',appliedOn:'2026-06-06'},
+    {id:'LR004',empId:'E010',empName:'Lakshmi D',type:'CL',from:'2026-06-20',to:'2026-06-20',days:1,reason:'Family function',status:'pending',appliedOn:'2026-06-07'},
+    {id:'LR005',empId:'E013',empName:'Balamurugan G',type:'EL',from:'2026-07-14',to:'2026-07-19',days:6,reason:'Annual family vacation',status:'pending',appliedOn:'2026-06-07'},
+  ],
+  leaveBalance:{},
+  productionData:{},
+  skillMatrix:{},
+  minWageTN:9879,
+};
+
+state.employees.forEach(e=>{
+  const days=Math.floor(Math.random()*5)+22;
+  state.attendance[`${e.id}-${thisMonth}`]=days;
+  state.leaveBalance[e.id]={CL:Math.floor(Math.random()*8)+4,SL:Math.floor(Math.random()*6)+6,EL:Math.floor(Math.random()*12)+5,ML:e.gender==='F'?182:0,LWP:0};
+});
+
+state.contractWorkers.forEach(w=>{
+  const qty=Math.floor(Math.random()*280)+60;
+  state.pieceEntries[`${w.id}-${thisMonth}`]=qty;
+});
+
+PRODUCTION_LINES.forEach(line=>{
+  state.productionData[line]=Array.from({length:7},(_,i)=>({
+    date:new Date(2026,5,2+i).toISOString().slice(0,10),
+    target:DAILY_TARGETS[line],
+    actual:Math.floor(DAILY_TARGETS[line]*(0.6+Math.random()*0.5)),
+    defects:Math.floor(Math.random()*15),
+  }));
+});
+
+['Stitching','Hemming','Cutting','Neck Stitching','Button Fixing'].forEach(skill=>{
+  state.skillMatrix[skill]=state.contractWorkers.filter(w=>w.skill===skill).slice(0,3).map(w=>w.id);
+});
+state.contractWorkers.forEach(w=>{
+  const extra=['Hemming','Ironing','Packing','Labelling'].filter(s=>s!==w.skill);
+  w.secondarySkills=[extra[Math.floor(Math.random()*extra.length)]];
+});
+
+function getPendingLeaves(){return state.leaveRequests.filter(l=>l.status==='pending').length}
+function updateBadge(){const n=getPendingLeaves();document.getElementById('pending-badge').textContent=n;document.getElementById('pending-badge').style.display=n>0?'':'none'}
+
+function navigate(page){
+  state.currentPage=page;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>{if(el.getAttribute('onclick')===`navigate('${page}')`)el.classList.add('active')});
+  const titles={dashboard:'Dashboard',employees:'Permanent Staff',contract:'Contract Workers',attendance:'Attendance',leaves:'Leave Manager',holidays:'Holiday Calendar',production:'Production Tracker',piecerate:'Piece Rate Entry',payroll:'Payroll',compliance:'Compliance Tracker',reports:'Reports',skills:'Skill Matrix'};
+  document.getElementById('page-title').textContent=titles[page]||page;
+  const renders={dashboard:renderDashboard,employees:renderEmployees,contract:renderContract,attendance:renderAttendance,leaves:renderLeaves,holidays:renderHolidays,production:renderProduction,piecerate:renderPieceRate,payroll:renderPayroll,compliance:renderCompliance,reports:renderReports,skills:renderSkills};
+  document.getElementById('content').innerHTML=(renders[page]||(() => '<p style="padding:2rem;color:var(--muted)">Coming soon</p>'))();
+  updateBadge();
+}
+
+function renderDashboard(){
+  const totalSalary=state.employees.reduce((s,e)=>s+e.salary,0);
+  const totalPiece=state.contractWorkers.reduce((s,w)=>s+(state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0),0);
+  const pending=getPendingLeaves();
+  const todayHol=TN_HOLIDAYS_2026.find(h=>h.date===today.toISOString().slice(0,10));
+  const nextHol=TN_HOLIDAYS_2026.find(h=>h.date>today.toISOString().slice(0,10));
+  const totalEff=PRODUCTION_LINES.reduce((s,l)=>{const d=state.productionData[l];return s+(d[d.length-1].actual/d[d.length-1].target*100)},0);
+  const avgEff=Math.round(totalEff/PRODUCTION_LINES.length);
+  const belowMin=state.contractWorkers.filter(w=>(state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0)<state.minWageTN).length;
+
+  return `
+${todayHol?`<div class="alert alert-warn"><i class="fa fa-star"></i> <strong>Today is ${todayHol.name}</strong> — marked as a holiday. No deductions apply for absent workers today.</div>`:''}
+${belowMin>0?`<div class="alert alert-danger"><i class="fa fa-triangle-exclamation"></i> <strong>${belowMin} contract workers</strong> earned below TN minimum wage (₹${state.minWageTN.toLocaleString()}) this month. Review piece entries.</div>`:''}
+<div class="stat-grid">
+  <div class="stat-card blue"><div class="stat-label">Total Workforce</div><div class="stat-value">80</div><div class="stat-sub">20 staff + 60 contract</div></div>
+  <div class="stat-card teal"><div class="stat-label">Avg Efficiency</div><div class="stat-value">${avgEff}%</div><div class="stat-sub">All production lines</div></div>
+  <div class="stat-card gold"><div class="stat-label">Leave Pending</div><div class="stat-value">${pending}</div><div class="stat-sub">Awaiting approval</div></div>
+  <div class="stat-card ${belowMin>0?'red':'green'}"><div class="stat-label">Below Min Wage</div><div class="stat-value">${belowMin}</div><div class="stat-sub">Contract workers</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1rem;margin-bottom:1rem">
+  <div class="card">
+    <div class="section-header"><div class="section-title">Production Efficiency — Today</div><span class="pill">Jun 8</span></div>
+    ${PRODUCTION_LINES.map(line=>{
+      const d=state.productionData[line];
+      const last=d[d.length-1];
+      const eff=Math.round(last.actual/last.target*100);
+      const col=eff>=90?'#43a047':eff>=70?'#fb8c00':'#e53935';
+      return `<div style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+          <span style="font-weight:500">${line}</span>
+          <span>${last.actual}/${last.target} units · <strong style="color:${col}">${eff}%</strong></span>
+        </div>
+        <div class="progress-bar"><div style="height:100%;border-radius:3px;background:${col};width:${Math.min(100,eff)}%"></div></div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="card">
+    <div class="section-header"><div class="section-title">Upcoming Holidays</div><span class="pill">Next 90 days</span></div>
+    ${TN_HOLIDAYS_2026.filter(h=>h.date>today.toISOString().slice(0,10)).slice(0,5).map(h=>{
+      const d=new Date(h.date);
+      const diff=Math.ceil((d-today)/(1000*60*60*24));
+      return `<div style="display:flex;align-items:center;gap:10px;padding:0.5rem 0;border-bottom:1px solid var(--border)">
+        <div style="width:40px;text-align:center;background:${h.type==='national'?'#e3f2fd':h.type==='tamil'?'#fce4ec':'#f3e5f5'};border-radius:6px;padding:3px">
+          <div style="font-size:13px;font-weight:700;color:var(--navy)">${d.getDate()}</div>
+          <div style="font-size:9px;color:var(--muted)">${d.toLocaleString('en-IN',{month:'short'})}</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${h.name}</div>
+          <div style="font-size:11px;color:var(--muted)">In ${diff} days · <span class="badge ${h.type==='national'?'badge-blue':h.type==='tamil'?'badge-purple':'badge-orange'}">${h.type}</span></div>
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="margin-top:0.75rem"><button class="btn btn-outline btn-sm" onclick="navigate('holidays')"><i class="fa fa-calendar"></i> Full Calendar</button></div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+  <div class="card">
+    <div class="section-header"><div class="section-title">Pending Leave Requests</div><span class="badge badge-gold">${pending}</span></div>
+    ${state.leaveRequests.filter(l=>l.status==='pending').map(l=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-weight:500;font-size:13px">${l.empName}</div>
+          <div style="font-size:11px;color:var(--muted)">${LEAVE_TYPES[l.type].label} · ${l.days} day${l.days>1?'s':''} · ${l.from}</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-sm btn-primary" onclick="approveLeave('${l.id}')"><i class="fa fa-check"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="rejectLeave('${l.id}')"><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+    `).join('')||'<div style="color:var(--muted);padding:1rem 0;text-align:center">No pending requests</div>'}
+    <div style="margin-top:0.75rem"><button class="btn btn-outline btn-sm" onclick="navigate('leaves')"><i class="fa fa-list"></i> All Leaves</button></div>
+  </div>
+  <div class="card">
+    <div class="section-header"><div class="section-title">Quick Actions</div></div>
+    <div style="display:flex;flex-direction:column;gap:0.6rem">
+      <button class="btn btn-primary" style="justify-content:flex-start" onclick="navigate('production')"><i class="fa fa-industry"></i> Enter Today's Production</button>
+      <button class="btn btn-navy" style="justify-content:flex-start" onclick="navigate('attendance')"><i class="fa fa-clock"></i> Mark Attendance</button>
+      <button class="btn btn-outline" style="justify-content:flex-start" onclick="navigate('piecerate')"><i class="fa fa-scissors"></i> Piece Rate Entry</button>
+      <button class="btn btn-outline" style="justify-content:flex-start" onclick="navigate('payroll')"><i class="fa fa-money-bill-wave"></i> Generate Payroll</button>
+      <button class="btn btn-warning" style="justify-content:flex-start" onclick="navigate('compliance')"><i class="fa fa-shield-halved"></i> Compliance Check</button>
+    </div>
+  </div>
+</div>`;
+}
+
+function renderHolidays(){
+  const months=[0,1,2,3,4,5,6,7,8,9,10,11];
+  const holMap={};
+  TN_HOLIDAYS_2026.forEach(h=>{holMap[h.date]=h});
+  const typeColors={national:'badge-blue',tamil:'badge-purple',religious:'badge-orange'};
+
+  let html=`
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+  <div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="section-title" style="margin-bottom:1rem">2026 Holiday Summary</div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
+        <span class="badge badge-blue">National ${TN_HOLIDAYS_2026.filter(h=>h.type==='national').length}</span>
+        <span class="badge badge-purple">Tamil Nadu ${TN_HOLIDAYS_2026.filter(h=>h.type==='tamil').length}</span>
+        <span class="badge badge-orange">Religious ${TN_HOLIDAYS_2026.filter(h=>h.type==='religious').length}</span>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Holiday</th><th>Type</th></tr></thead>
+        <tbody>
+        ${TN_HOLIDAYS_2026.map(h=>`
+          <tr ${h.date===today.toISOString().slice(0,10)?'style="background:#fff8e1"':''}>
+            <td style="font-weight:500;white-space:nowrap">${new Date(h.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
+            <td>${h.name}</td>
+            <td><span class="badge ${typeColors[h.type]}">${h.type}</span></td>
+          </tr>
+        `).join('')}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">June 2026 Calendar</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">
+        ${['S','M','T','W','T','F','S'].map(d=>`<div style="text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:4px">${d}</div>`).join('')}
+      </div>
+      ${renderMiniCal(2026,5,holMap)}
+    </div>
+    <div class="card" style="margin-top:1rem">
+      <div class="section-title" style="margin-bottom:0.75rem">Legend</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:#ffebee"></div> Public / National Holiday</div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:#f3e5f5"></div> Sunday</div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:var(--navy)"></div> Today</div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:#e3f2fd"></div> CL (Casual Leave)</div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:#e8f5e9"></div> SL (Sick Leave)</div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:4px;background:#fff8e1"></div> LWP</div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  return html;
+}
+
+function renderMiniCal(year,month,holMap){
+  const first=new Date(year,month,1).getDay();
+  const days=new Date(year,month+1,0).getDate();
+  let cells='<div class="cal-grid">';
+  for(let i=0;i<first;i++) cells+=`<div class="cal-day other-month"></div>`;
+  for(let d=1;d<=days;d++){
+    const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow=new Date(year,month,d).getDay();
+    const isToday=dateStr===today.toISOString().slice(0,10);
+    const isHol=holMap[dateStr];
+    const isSun=dow===0;
+    let cls='cal-day';
+    if(isToday) cls+=' today';
+    else if(isHol) cls+=' holiday';
+    else if(isSun) cls+=' sunday';
+    cells+=`<div class="${cls}" title="${isHol?isHol.name:isSun?'Sunday':''}">${d}</div>`;
+  }
+  cells+='</div>';
+  return cells;
+}
+
+function renderLeaves(){
+  const pending=state.leaveRequests.filter(l=>l.status==='pending');
+  const all=state.leaveRequests;
+  return `
+<div class="section-header" style="margin-bottom:1rem">
+  <div style="display:flex;gap:0.5rem">
+    <button class="btn btn-primary" onclick="openLeaveRequest()"><i class="fa fa-plus"></i> New Leave Request</button>
+  </div>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab2(this,'lv-pending','lv-all','lv-bal')">Pending (${pending.length})</div>
+  <div class="tab" onclick="switchTab2(this,'lv-all','lv-pending','lv-bal')">All Requests</div>
+  <div class="tab" onclick="switchTab2(this,'lv-bal','lv-pending','lv-all')">Leave Balances</div>
+</div>
+<div id="lv-pending">
+  ${pending.length===0?'<div class="alert alert-success"><i class="fa fa-check-circle"></i> No pending leave requests.</div>':''}
+  ${pending.map(l=>leaveCard(l,true)).join('')}
+</div>
+<div id="lv-all" class="hidden">
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    ${all.map(l=>`<tr>
+      <td><span class="pill">${l.id}</span></td>
+      <td style="font-weight:500">${l.empName}</td>
+      <td><span class="badge ${LEAVE_TYPES[l.type].color}">${l.type}</span></td>
+      <td>${l.from}</td><td>${l.to}</td>
+      <td style="text-align:center">${l.days}</td>
+      <td style="color:var(--muted);max-width:140px">${l.reason}</td>
+      <td><span class="badge ${l.status==='approved'?'badge-green':l.status==='rejected'?'badge-red':'badge-gold'}">${l.status}</span></td>
+      <td>${l.status==='pending'?`<button class="btn btn-sm btn-primary" onclick="approveLeave('${l.id}')">Approve</button>`:'—'}</td>
+    </tr>`).join('')}
+    </tbody>
+  </table>
+  </div>
+</div>
+<div id="lv-bal" class="hidden">
+  <div class="alert alert-info"><i class="fa fa-info-circle"></i> Leave balances as per Factories Act. EL accrues at 1 day per 20 days worked. Maternity: 26 weeks for female workers.</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Employee</th><th>Dept</th><th>CL (of 12)</th><th>SL (of 12)</th><th>EL (of 18)</th><th>ML</th><th>LWP Used</th></tr></thead>
+    <tbody>
+    ${state.employees.map(e=>{const b=state.leaveBalance[e.id]||{};return`<tr>
+      <td style="font-weight:500">${e.name}</td>
+      <td>${e.dept}</td>
+      <td><span style="color:${b.CL<3?'var(--red)':'var(--green)'};font-weight:600">${b.CL||0}</span></td>
+      <td><span style="color:${b.SL<3?'var(--red)':'var(--green)'};font-weight:600">${b.SL||0}</span></td>
+      <td><span style="font-weight:600">${b.EL||0}</span></td>
+      <td>${e.gender==='F'?`<span class="badge badge-purple">${b.ML||182} days</span>`:'<span style="color:var(--muted)">N/A</span>'}</td>
+      <td>${b.LWP||0}</td>
+    </tr>`}).join('')}
+    </tbody>
+  </table>
+  </div>
+</div>`;
+}
+
+function leaveCard(l,showActions){
+  return `<div class="card" style="margin-bottom:0.875rem">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-weight:600;font-size:14px">${l.empName} <span class="badge ${LEAVE_TYPES[l.type].color}" style="vertical-align:middle">${LEAVE_TYPES[l.type].label}</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">${l.from} → ${l.to} &nbsp;·&nbsp; <strong>${l.days} day${l.days>1?'s':''}</strong></div>
+        <div style="font-size:13px;margin-top:6px;color:var(--text)">${l.reason}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Applied: ${l.appliedOn}</div>
+      </div>
+      ${showActions?`<div style="display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" onclick="approveLeave('${l.id}')"><i class="fa fa-check"></i> Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="rejectLeave('${l.id}')"><i class="fa fa-times"></i> Reject</button>
+      </div>`:`<span class="badge ${l.status==='approved'?'badge-green':'badge-red'}">${l.status}</span>`}
+    </div>
+  </div>`;
+}
+
+function approveLeave(id){
+  const l=state.leaveRequests.find(r=>r.id===id);
+  if(l){l.status='approved';}
+  navigate(state.currentPage);
+}
+function rejectLeave(id){
+  const l=state.leaveRequests.find(r=>r.id===id);
+  if(l){l.status='rejected';}
+  navigate(state.currentPage);
+}
+
+function openLeaveRequest(){
+  showModal(`
+    <div class="modal-header">
+      <div class="modal-title">New Leave Request</div>
+      <button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Employee</label>
+        <select id="lv-emp">${state.employees.map(e=>`<option value="${e.id}">${e.name} — ${e.dept}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label>Leave Type</label>
+        <select id="lv-type">${Object.entries(LEAVE_TYPES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label>From Date</label><input type="date" id="lv-from" value="${today.toISOString().slice(0,10)}"></div>
+      <div class="form-group"><label>To Date</label><input type="date" id="lv-to" value="${today.toISOString().slice(0,10)}"></div>
+      <div class="form-group full"><label>Reason</label><textarea id="lv-reason" placeholder="Reason for leave..."></textarea></div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitLeave()"><i class="fa fa-paper-plane"></i> Submit Request</button>
+    </div>
+  `);
+}
+
+function submitLeave(){
+  const empId=document.getElementById('lv-emp').value;
+  const emp=state.employees.find(e=>e.id===empId);
+  const type=document.getElementById('lv-type').value;
+  const from=document.getElementById('lv-from').value;
+  const to=document.getElementById('lv-to').value;
+  const reason=document.getElementById('lv-reason').value.trim();
+  if(!from||!to||!reason){alert('Fill all fields');return;}
+  const days=Math.max(1,Math.ceil((new Date(to)-new Date(from))/(1000*60*60*24))+1);
+  const newId='LR'+String(state.leaveRequests.length+1).padStart(3,'0');
+  state.leaveRequests.push({id:newId,empId,empName:emp.name,type,from,to,days,reason,status:'pending',appliedOn:today.toISOString().slice(0,10)});
+  closeModal();
+  navigate('leaves');
+}
+
+function renderProduction(){
+  return `
+<div class="alert alert-info"><i class="fa fa-info-circle"></i> Track daily output per line vs target. Efficiency below 70% triggers a flag. Defects reduce effective output.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+${PRODUCTION_LINES.map(line=>{
+  const data=state.productionData[line];
+  const latest=data[data.length-1];
+  const eff=Math.round(latest.actual/latest.target*100);
+  const col=eff>=90?'var(--green)':eff>=70?'var(--orange)':'var(--red)';
+  const weekTotal=data.reduce((s,d)=>s+d.actual,0);
+  const weekTarget=data.reduce((s,d)=>s+d.target,0);
+  const weekEff=Math.round(weekTotal/weekTarget*100);
+  return `<div class="card">
+    <div class="section-header">
+      <div class="section-title">${line}</div>
+      <span class="badge ${eff>=90?'badge-green':eff>=70?'badge-gold':'badge-red'}">${eff}% today</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:1rem">
+      <div style="text-align:center;background:var(--cream);border-radius:8px;padding:0.75rem">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--navy)">${latest.actual}</div>
+        <div style="font-size:10px;color:var(--muted)">Actual</div>
+      </div>
+      <div style="text-align:center;background:var(--cream);border-radius:8px;padding:0.75rem">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--muted)">${latest.target}</div>
+        <div style="font-size:10px;color:var(--muted)">Target</div>
+      </div>
+      <div style="text-align:center;background:var(--cream);border-radius:8px;padding:0.75rem">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--red)">${latest.defects}</div>
+        <div style="font-size:10px;color:var(--muted)">Defects</div>
+      </div>
+    </div>
+    <div style="margin-bottom:0.5rem;font-size:12px;color:var(--muted)">Week efficiency: <strong style="color:${col}">${weekEff}%</strong></div>
+    <div class="progress-bar" style="height:8px"><div style="height:100%;border-radius:4px;background:${col};width:${Math.min(100,weekEff)}%"></div></div>
+    <div style="margin-top:0.875rem">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Last 7 days</div>
+      <div style="display:flex;align-items:flex-end;gap:3px;height:50px">
+        ${data.map(d=>{const e=Math.round(d.actual/d.target*100);const c=e>=90?'#43a047':e>=70?'#fb8c00':'#e53935';return`<div style="flex:1;background:${c};height:${Math.round(e/100*50)}px;border-radius:2px 2px 0 0" title="${d.date}: ${e}%"></div>`}).join('')}
+      </div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <button class="btn btn-outline btn-sm" onclick="enterProduction('${line}')"><i class="fa fa-plus"></i> Update Today</button>
+    </div>
+  </div>`;
+}).join('')}
+</div>
+<div class="card">
+  <div class="section-header"><div class="section-title">Worker Efficiency — Top Performers</div><span class="pill">This week</span></div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Worker</th><th>Skill</th><th>Units</th><th>Efficiency</th><th>Flag</th></tr></thead>
+    <tbody>
+    ${state.contractWorkers.slice(0,12).map(w=>{
+      const qty=state.pieceEntries[`${w.id}-${thisMonth}`]||0;
+      const maxQty=350;
+      const eff=Math.min(100,Math.round(qty/maxQty*100));
+      const flag=eff<50?'badge-red':eff<75?'badge-gold':'badge-green';
+      const label=eff<50?'Low':'eff<75'?'Avg':'Good';
+      return`<tr>
+        <td style="font-weight:500">${w.name}</td>
+        <td><span class="badge badge-blue">${w.skill}</span></td>
+        <td>${qty}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${eff}%;background:${eff>=75?'var(--green)':eff>=50?'var(--orange)':'var(--red)'}"></div></div>
+            <span style="font-size:12px;font-weight:600">${eff}%</span>
+          </div>
+        </td>
+        <td><span class="badge ${flag}">${eff>=75?'Good':eff>=50?'Average':'Low'}</span></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>
+  </div>
+</div>`;
+}
+
+function enterProduction(line){
+  showModal(`
+    <div class="modal-header">
+      <div class="modal-title">Update Production — ${line}</div>
+      <button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Date</label><input type="date" id="pr-date" value="${today.toISOString().slice(0,10)}"></div>
+      <div class="form-group"><label>Target Units</label><input type="number" id="pr-target" value="${DAILY_TARGETS[line]}"></div>
+      <div class="form-group"><label>Actual Output</label><input type="number" id="pr-actual" placeholder="Units completed"></div>
+      <div class="form-group"><label>Defect Count</label><input type="number" id="pr-defects" placeholder="0" value="0"></div>
+      <div class="form-group full"><label>Notes (optional)</label><textarea id="pr-notes" placeholder="Machine downtime, worker shortage, etc."></textarea></div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProduction('${line}')"><i class="fa fa-save"></i> Save</button>
+    </div>
+  `);
+}
+
+function saveProduction(line){
+  const actual=parseInt(document.getElementById('pr-actual').value)||0;
+  const target=parseInt(document.getElementById('pr-target').value)||DAILY_TARGETS[line];
+  const defects=parseInt(document.getElementById('pr-defects').value)||0;
+  const date=document.getElementById('pr-date').value;
+  const data=state.productionData[line];
+  const idx=data.findIndex(d=>d.date===date);
+  const entry={date,target,actual,defects};
+  if(idx>=0) data[idx]=entry; else data.push(entry);
+  closeModal();
+  navigate('production');
+}
+
+function renderSkills(){
+  return `
+<div class="alert alert-info"><i class="fa fa-info-circle"></i> Skill matrix helps in line balancing — when a worker is absent, find a substitute instantly from secondary skills.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Primary Skill Distribution</div>
+    ${Object.entries(state.pieceRates).map(([skill])=>{
+      const count=state.contractWorkers.filter(w=>w.skill===skill).length;
+      const pct=Math.round(count/60*100);
+      return`<div style="margin-bottom:0.75rem">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+          <span style="font-weight:500">${skill}</span><span>${count} workers (${pct}%)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Multi-Skilled Workers</div>
+    <div class="table-wrap" style="max-height:320px;overflow-y:auto">
+    <table>
+      <thead><tr><th>Worker</th><th>Primary</th><th>Secondary</th></tr></thead>
+      <tbody>
+      ${state.contractWorkers.filter(w=>w.secondarySkills&&w.secondarySkills.length).slice(0,20).map(w=>`
+        <tr>
+          <td style="font-weight:500">${w.name}</td>
+          <td><span class="badge badge-blue">${w.skill}</span></td>
+          <td>${w.secondarySkills.map(s=>`<span class="badge badge-teal" style="margin-right:3px">${s}</span>`).join('')}</td>
+        </tr>
+      `).join('')}
+      </tbody>
+    </table>
+    </div>
+    <div style="color:var(--muted);font-size:12px;margin-top:0.5rem">Showing 20 of ${state.contractWorkers.filter(w=>w.secondarySkills&&w.secondarySkills.length).length}</div>
+  </div>
+</div>
+<div class="card">
+  <div class="section-title" style="margin-bottom:1rem">Substitute Finder — If a worker is absent</div>
+  <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:1rem">
+    <select id="sub-skill" style="width:200px">
+      ${Object.keys(state.pieceRates).map(s=>`<option>${s}</option>`).join('')}
+    </select>
+    <button class="btn btn-primary" onclick="findSubs()"><i class="fa fa-search"></i> Find Substitutes</button>
+  </div>
+  <div id="sub-results"></div>
+</div>`;
+}
+
+function findSubs(){
+  const skill=document.getElementById('sub-skill').value;
+  const primary=state.contractWorkers.filter(w=>w.skill===skill);
+  const secondary=state.contractWorkers.filter(w=>w.skill!==skill&&w.secondarySkills&&w.secondarySkills.includes(skill));
+  document.getElementById('sub-results').innerHTML=`
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> <strong>${primary.length}</strong> primary workers + <strong>${secondary.length}</strong> cross-trained workers available for <strong>${skill}</strong></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase">Primary (${primary.length})</div>
+        ${primary.slice(0,5).map(w=>`<div style="padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:13px"><span style="font-weight:500">${w.name}</span> <span class="badge badge-blue" style="font-size:9px">primary</span></div>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase">Cross-trained (${secondary.length})</div>
+        ${secondary.slice(0,5).map(w=>`<div style="padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:13px"><span style="font-weight:500">${w.name}</span> <span class="badge badge-teal" style="font-size:9px">secondary</span><div style="font-size:11px;color:var(--muted)">Primary: ${w.skill}</div></div>`).join('')}
+        ${secondary.length===0?'<div style="color:var(--muted);font-size:13px">No cross-trained workers found</div>':''}
+      </div>
+    </div>`;
+}
+
+function renderCompliance(){
+  const belowMin=state.contractWorkers.filter(w=>(state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0)<state.minWageTN);
+  const totalEmp=state.employees.length+state.contractWorkers.length;
+  const femaleCount=state.employees.filter(e=>e.gender==='F').length+state.contractWorkers.filter(w=>w.gender==='F').length;
+  const maleCount=totalEmp-femaleCount;
+  return `
+<div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+  <div class="stat-card ${belowMin.length>0?'red':'green'}"><div class="stat-label">Minimum Wage Alert</div><div class="stat-value">${belowMin.length}</div><div class="stat-sub">Workers below ₹${state.minWageTN.toLocaleString()}/mo</div></div>
+  <div class="stat-card teal"><div class="stat-label">Gender Ratio</div><div class="stat-value">${Math.round(femaleCount/totalEmp*100)}%</div><div class="stat-sub">Female workforce</div></div>
+  <div class="stat-card blue"><div class="stat-label">Contract Workers</div><div class="stat-value">60</div><div class="stat-sub">${60>=20?'Licence required':'Below threshold'}</div></div>
+</div>
+${belowMin.length>0?`
+<div class="alert alert-danger"><i class="fa fa-triangle-exclamation"></i> <strong>${belowMin.length} workers</strong> earned below TN minimum wage of ₹${state.minWageTN.toLocaleString()} this month. You must top up their wages to comply with the Minimum Wages Act.</div>
+<div class="card" style="margin-bottom:1rem">
+  <div class="section-title" style="margin-bottom:1rem">Workers Below Minimum Wage</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Worker</th><th>Skill</th><th>Units</th><th>Earned (₹)</th><th>Shortfall (₹)</th></tr></thead>
+    <tbody>
+    ${belowMin.map(w=>{const earned=Math.round((state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0));const shortfall=state.minWageTN-earned;return`<tr>
+      <td style="font-weight:500">${w.name}</td>
+      <td><span class="badge badge-blue">${w.skill}</span></td>
+      <td>${state.pieceEntries[`${w.id}-${thisMonth}`]||0}</td>
+      <td style="color:var(--red);font-weight:600">₹${earned.toLocaleString()}</td>
+      <td style="color:var(--red);font-weight:700">₹${shortfall.toLocaleString()}</td>
+    </tr>`}).join('')}
+    </tbody>
+    <tfoot><tr><td colspan="4" style="text-align:right">Total Shortfall:</td><td style="color:var(--red);font-weight:700">₹${belowMin.reduce((s,w)=>s+state.minWageTN-Math.round((state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0)),0).toLocaleString()}</td></tr></tfoot>
+  </table>
+  </div>
+</div>`:'<div class="alert alert-success"><i class="fa fa-check-circle"></i> All workers earned above TN minimum wage this month.</div>'}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Factories Act Checklist</div>
+    ${[
+      ['Form F – Worker Register',true],
+      ['Muster Roll maintained',true],
+      ['Wage Register – monthly',true],
+      ['Contract Labour Licence (>20 workers)',true],
+      ['ESI registration (workers <₹21k)',false],
+      ['Maternity Benefit Act compliance',true],
+      ['Annual Leave records',true],
+      ['OT register maintained',false],
+    ].map(([item,done])=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:0.5rem 0;border-bottom:1px solid var(--border)">
+        <div style="width:20px;height:20px;border-radius:50%;background:${done?'var(--green)':'var(--red)'};display:flex;align-items:center;justify-content:center">
+          <i class="fa ${done?'fa-check':'fa-times'}" style="color:#fff;font-size:10px"></i>
+        </div>
+        <span style="font-size:13px;${done?'':'color:var(--red);font-weight:500'}">${item}</span>
+      </div>
+    `).join('')}
+  </div>
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Workforce Demographics</div>
+    <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:13.5px">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Total headcount</span><strong>${totalEmp}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Female workers</span><strong>${femaleCount} (${Math.round(femaleCount/totalEmp*100)}%)</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Male workers</span><strong>${maleCount} (${Math.round(maleCount/totalEmp*100)}%)</strong></div>
+      <div class="divider"></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">On Maternity Leave</span><strong>${state.leaveRequests.filter(l=>l.type==='ML'&&l.status==='approved').length}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">TN Minimum Wage</span><strong>₹${state.minWageTN.toLocaleString()}/mo</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">ESI Threshold</span><strong>₹21,000/mo</strong></div>
+    </div>
+  </div>
+</div>`;
+}
+
+function renderAttendance(){
+  const holDates=new Set(TN_HOLIDAYS_2026.map(h=>h.date));
+  return`
+<div class="alert alert-info"><i class="fa fa-info-circle"></i> Public holidays are auto-excluded from deductions. Sundays are non-working. Working days this month: <strong>${getWorkingDays(2026,5)}</strong></div>
+<div class="section-header">
+  <div class="section-title">Staff Attendance — ${thisMonthName}</div>
+  <button class="btn btn-primary btn-sm" onclick="saveAttAll()"><i class="fa fa-save"></i> Save All</button>
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Days Present</th><th>Working Days</th><th>Absences</th><th>Holidays</th><th>Status</th></tr></thead>
+  <tbody>
+  ${state.employees.map(emp=>{
+    const wd=getWorkingDays(2026,5);
+    const hols=getHolidaysInMonth(2026,5);
+    const days=state.attendance[`${emp.id}-${thisMonth}`]||wd;
+    return`<tr>
+      <td><span class="pill">${emp.id}</span></td>
+      <td style="font-weight:500">${emp.name}</td>
+      <td>${emp.dept}</td>
+      <td><input type="number" min="0" max="${wd}" value="${days}" id="att-${emp.id}" style="width:65px;text-align:center" onchange="state.attendance['${emp.id}-${thisMonth}']=parseInt(this.value)||0"></td>
+      <td style="text-align:center">${wd}</td>
+      <td style="text-align:center;color:${wd-days>3?'var(--red)':'var(--muted)'}">${wd-days}</td>
+      <td style="text-align:center">${hols}</td>
+      <td><span class="badge ${days>=wd-2?'badge-green':days>=wd-5?'badge-gold':'badge-red'}">${days>=wd-2?'Full':days>=wd-5?'OK':'Low'}</span></td>
+    </tr>`;
+  }).join('')}
+  </tbody>
+</table>
+</div>`;
+}
+
+function getWorkingDays(year,month){
+  let count=0;
+  const days=new Date(year,month+1,0).getDate();
+  for(let d=1;d<=days;d++){
+    const date=new Date(year,month,d);
+    const ds=date.toISOString().slice(0,10);
+    if(date.getDay()!==0&&!TN_HOLIDAYS_2026.find(h=>h.date===ds)) count++;
+  }
+  return count;
+}
+function getHolidaysInMonth(year,month){
+  return TN_HOLIDAYS_2026.filter(h=>h.date.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)).length;
+}
+function saveAttAll(){alert('Attendance saved for '+thisMonthName+'!');}
+
+function renderEmployees(){
+  return`
+<div class="section-header">
+  <div style="display:flex;gap:0.75rem">
+    <input type="text" placeholder="Search..." id="es" style="width:180px" oninput="filterEmp()">
+    <select id="ed" onchange="filterEmp()"><option value="">All Depts</option>${[...new Set(state.employees.map(e=>e.dept))].map(d=>`<option>${d}</option>`).join('')}</select>
+  </div>
+  <button class="btn btn-primary" onclick="openAddEmp()"><i class="fa fa-plus"></i> Add Staff</button>
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Role</th><th>Salary</th><th>Gender</th><th>Joined</th><th>CL left</th><th>Actions</th></tr></thead>
+  <tbody id="etb">${state.employees.map(empRow).join('')}</tbody>
+</table>
+</div>`;
+}
+
+function empRow(e){
+  const b=state.leaveBalance[e.id]||{};
+  return`<tr><td><span class="pill">${e.id}</span></td><td style="font-weight:500">${e.name}</td><td>${e.dept}</td><td style="color:var(--muted)">${e.role}</td><td style="font-weight:600">₹${e.salary.toLocaleString()}</td><td><span class="badge ${e.gender==='F'?'badge-purple':'badge-blue'}">${e.gender==='F'?'Female':'Male'}</span></td><td>${e.joined}</td><td style="text-align:center;color:${(b.CL||0)<3?'var(--red)':'var(--green)'}">${b.CL||0}</td><td><button class="btn btn-outline btn-sm" onclick="viewEmp('${e.id}')"><i class="fa fa-eye"></i></button></td></tr>`;
+}
+
+function filterEmp(){
+  const q=(document.getElementById('es').value||'').toLowerCase();
+  const d=document.getElementById('ed').value;
+  const tb=document.getElementById('etb');
+  if(tb) tb.innerHTML=state.employees.filter(e=>(!q||e.name.toLowerCase().includes(q))&&(!d||e.dept===d)).map(empRow).join('');
+}
+
+function viewEmp(id){
+  const e=state.employees.find(x=>x.id===id);if(!e)return;
+  const b=state.leaveBalance[e.id]||{};
+  const days=state.attendance[`${e.id}-${thisMonth}`]||getWorkingDays(2026,5);
+  const wd=getWorkingDays(2026,5);
+  const net=Math.round(e.salary/wd*days);
+  showModal(`<div class="modal-header"><div class="modal-title">${e.name}</div><button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1.25rem">
+    <div style="background:var(--cream);border-radius:8px;padding:0.875rem;text-align:center"><div style="font-size:1.3rem;font-weight:700">${days}/${wd}</div><div style="font-size:11px;color:var(--muted)">Attendance</div></div>
+    <div style="background:var(--cream);border-radius:8px;padding:0.875rem;text-align:center"><div style="font-size:1.3rem;font-weight:700;color:var(--teal)">₹${net.toLocaleString()}</div><div style="font-size:11px;color:var(--muted)">Net Payable</div></div>
+    <div style="background:var(--cream);border-radius:8px;padding:0.875rem;text-align:center"><div style="font-size:1.3rem;font-weight:700;color:${(b.CL||0)<3?'var(--red)':'var(--green)'}">${b.CL||0}</div><div style="font-size:11px;color:var(--muted)">CL Remaining</div></div>
+  </div>
+  <div style="font-size:13.5px;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+    <div><span style="color:var(--muted)">Role:</span> ${e.role}</div>
+    <div><span style="color:var(--muted)">Dept:</span> ${e.dept}</div>
+    <div><span style="color:var(--muted)">Phone:</span> ${e.phone}</div>
+    <div><span style="color:var(--muted)">Joined:</span> ${e.joined}</div>
+    <div><span style="color:var(--muted)">Gender:</span> ${e.gender==='F'?'Female':'Male'}</div>
+    <div><span style="color:var(--muted)">Salary:</span> ₹${e.salary.toLocaleString()}/mo</div>
+  </div>
+  <hr class="divider">
+  <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:0.75rem;text-transform:uppercase">Leave Balance</div>
+  <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+    ${Object.entries(LEAVE_TYPES).filter(([k])=>k!=='LWP'&&(k!=='ML'||e.gender==='F')).map(([k,v])=>`<div style="background:var(--cream);border-radius:8px;padding:0.6rem 1rem;text-align:center"><div style="font-weight:700;font-size:1.1rem">${b[k]||0}</div><div style="font-size:10px;color:var(--muted)">${v.short} left</div></div>`).join('')}
+  </div>`);
+}
+
+function openAddEmp(){
+  showModal(`<div class="modal-header"><div class="modal-title">Add Permanent Staff</div><button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button></div>
+  <div class="form-grid">
+    <div class="form-group"><label>Full Name</label><input type="text" id="n-name"></div>
+    <div class="form-group"><label>Department</label><select id="n-dept"><option>Production</option><option>Quality</option><option>Finishing</option><option>Admin</option><option>Design</option><option>Dispatch</option><option>Accounts</option></select></div>
+    <div class="form-group"><label>Role</label><input type="text" id="n-role"></div>
+    <div class="form-group"><label>Monthly Salary (₹)</label><input type="number" id="n-sal"></div>
+    <div class="form-group"><label>Phone</label><input type="tel" id="n-ph"></div>
+    <div class="form-group"><label>Gender</label><select id="n-gen"><option value="F">Female</option><option value="M">Male</option></select></div>
+    <div class="form-group"><label>Date of Joining</label><input type="date" id="n-join" value="${today.toISOString().slice(0,10)}"></div>
+  </div>
+  <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveEmp()"><i class="fa fa-save"></i> Save</button>
+  </div>`);
+}
+
+function saveEmp(){
+  const name=document.getElementById('n-name').value.trim();
+  const salary=parseInt(document.getElementById('n-sal').value)||0;
+  const phone=document.getElementById('n-ph').value.trim();
+  if(!name||!salary||!phone){alert('Fill required fields');return;}
+  const id='E'+String(state.employees.length+1).padStart(3,'0');
+  const gender=document.getElementById('n-gen').value;
+  state.employees.push({id,name,dept:document.getElementById('n-dept').value,role:document.getElementById('n-role').value,salary,phone,gender,joined:document.getElementById('n-join').value,status:'active',line:null});
+  state.leaveBalance[id]={CL:12,SL:12,EL:0,ML:gender==='F'?182:0,LWP:0};
+  closeModal();navigate('employees');
+}
+
+function renderContract(){
+  return`
+<div class="section-header">
+  <div style="display:flex;gap:0.75rem">
+    <input type="text" placeholder="Search..." id="cs" style="width:160px" oninput="filterCon()">
+    <select id="csk" onchange="filterCon()"><option value="">All Skills</option>${Object.keys(state.pieceRates).map(s=>`<option>${s}</option>`).join('')}</select>
+  </div>
+  <button class="btn btn-primary" onclick="addCon()"><i class="fa fa-plus"></i> Add Worker</button>
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Skill</th><th>Rate/Unit</th><th>Units (Jun)</th><th>Earned</th><th>Min Wage</th><th>Phone</th></tr></thead>
+  <tbody id="ctb">${conRows(state.contractWorkers)}</tbody>
+</table>
+</div>`;
+}
+
+function conRows(workers){
+  return workers.map(w=>{
+    const qty=state.pieceEntries[`${w.id}-${thisMonth}`]||0;
+    const rate=state.pieceRates[w.skill]||0;
+    const earn=Math.round(qty*rate);
+    const ok=earn>=state.minWageTN;
+    return`<tr><td><span class="pill">${w.id}</span></td><td style="font-weight:500">${w.name}</td><td><span class="badge badge-blue">${w.skill}</span></td><td>₹${rate.toFixed(2)}</td><td style="font-weight:600">${qty}</td><td style="font-weight:700;color:${ok?'var(--teal)':'var(--red)'}">${earn>0?'₹'+earn.toLocaleString():'—'}</td><td>${ok?'<span class="badge badge-green">OK</span>':'<span class="badge badge-red">Below</span>'}</td><td>${w.phone}</td></tr>`;
+  }).join('');
+}
+
+function filterCon(){
+  const q=(document.getElementById('cs').value||'').toLowerCase();
+  const sk=document.getElementById('csk').value;
+  const tb=document.getElementById('ctb');
+  if(tb) tb.innerHTML=conRows(state.contractWorkers.filter(w=>(!q||w.name.toLowerCase().includes(q))&&(!sk||w.skill===sk)));
+}
+
+function addCon(){
+  showModal(`<div class="modal-header"><div class="modal-title">Add Contract Worker</div><button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button></div>
+  <div class="form-grid">
+    <div class="form-group"><label>Full Name</label><input type="text" id="cw-n"></div>
+    <div class="form-group"><label>Primary Skill</label><select id="cw-sk">${Object.keys(state.pieceRates).map(s=>`<option>${s}</option>`).join('')}</select></div>
+    <div class="form-group"><label>Phone</label><input type="tel" id="cw-ph"></div>
+    <div class="form-group"><label>Gender</label><select id="cw-gen"><option value="F">Female</option><option value="M">Male</option></select></div>
+  </div>
+  <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveCon()"><i class="fa fa-save"></i> Save</button>
+  </div>`);
+}
+
+function saveCon(){
+  const name=document.getElementById('cw-n').value.trim();
+  const phone=document.getElementById('cw-ph').value.trim();
+  if(!name||!phone){alert('Fill required fields');return;}
+  const id='C'+String(state.contractWorkers.length+1).padStart(3,'0');
+  state.contractWorkers.push({id,name,skill:document.getElementById('cw-sk').value,phone,gender:document.getElementById('cw-gen').value,status:'active',secondarySkills:[]});
+  closeModal();navigate('contract');
+}
+
+function renderPieceRate(){
+  return`
+<div style="display:grid;grid-template-columns:280px 1fr;gap:1rem">
+  <div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">Rate Settings (₹/unit)</div>
+      ${Object.entries(state.pieceRates).map(([a,r])=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid var(--border)">
+          <span style="font-weight:500;font-size:13px">${a}</span>
+          <input type="number" step="0.1" min="0" value="${r}" style="width:75px;text-align:right" onchange="state.pieceRates['${a}']=parseFloat(this.value)||0">
+        </div>`).join('')}
+      <div style="margin-top:1rem;display:flex;gap:0.5rem">
+        <input type="text" id="na" placeholder="New action" style="flex:1">
+        <input type="number" id="nr" placeholder="₹" step="0.1" style="width:65px">
+        <button class="btn btn-primary btn-sm" onclick="addAct()"><i class="fa fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">Bulk Entry — ${today.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>
+      <div style="display:flex;gap:0.5rem">
+        <select id="bsk"><option value="">All skills</option>${Object.keys(state.pieceRates).map(s=>`<option>${s}</option>`).join('')}</select>
+        <button class="btn btn-outline btn-sm" onclick="filterBulk2()"><i class="fa fa-filter"></i></button>
+        <button class="btn btn-primary btn-sm" onclick="saveBulk()"><i class="fa fa-save"></i> Save All</button>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:480px;overflow-y:auto">
+    <table>
+      <thead><tr><th>Worker</th><th>Skill</th><th>Rate</th><th>Units Today</th><th>Today Earn</th></tr></thead>
+      <tbody id="bktb">
+      ${state.contractWorkers.map(w=>`<tr>
+        <td style="font-weight:500;font-size:12px">${w.name}</td>
+        <td><span class="badge badge-blue" style="font-size:9px">${w.skill}</span></td>
+        <td style="font-size:12px">₹${state.pieceRates[w.skill]||0}</td>
+        <td><input type="number" min="0" placeholder="0" id="bk-${w.id}" style="width:70px;text-align:center" oninput="calcEarn('${w.id}')"></td>
+        <td style="font-size:12px;color:var(--teal);font-weight:600" id="earn-${w.id}">—</td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>`;
+}
+
+function calcEarn(wid){
+  const w=state.contractWorkers.find(x=>x.id===wid);if(!w)return;
+  const qty=parseInt(document.getElementById(`bk-${wid}`).value)||0;
+  const earn=Math.round(qty*(state.pieceRates[w.skill]||0));
+  const el=document.getElementById(`earn-${wid}`);
+  if(el) el.textContent=qty>0?'₹'+earn.toLocaleString():'—';
+}
+
+function addAct(){
+  const n=document.getElementById('na').value.trim();
+  const r=parseFloat(document.getElementById('nr').value)||0;
+  if(!n||!r){alert('Enter name and rate');return;}
+  state.pieceRates[n]=r;navigate('piecerate');
+}
+
+function filterBulk2(){
+  const sk=document.getElementById('bsk').value;
+  const tb=document.getElementById('bktb');if(!tb)return;
+  const filtered=sk?state.contractWorkers.filter(w=>w.skill===sk):state.contractWorkers;
+  tb.innerHTML=filtered.map(w=>`<tr><td style="font-weight:500;font-size:12px">${w.name}</td><td><span class="badge badge-blue" style="font-size:9px">${w.skill}</span></td><td style="font-size:12px">₹${state.pieceRates[w.skill]||0}</td><td><input type="number" min="0" placeholder="0" id="bk-${w.id}" style="width:70px;text-align:center" oninput="calcEarn('${w.id}')"></td><td style="font-size:12px;color:var(--teal);font-weight:600" id="earn-${w.id}">—</td></tr>`).join('');
+}
+
+function saveBulk(){
+  let n=0;
+  state.contractWorkers.forEach(w=>{const el=document.getElementById(`bk-${w.id}`);if(el&&parseInt(el.value)>0){state.pieceEntries[`${w.id}-${thisMonth}`]=(state.pieceEntries[`${w.id}-${thisMonth}`]||0)+parseInt(el.value);n++;}});
+  alert(`Saved entries for ${n} workers`);navigate('piecerate');
+}
+
+function renderPayroll(){
+  const wd=getWorkingDays(2026,5);
+  const empPay=state.employees.map(e=>{
+    const days=state.attendance[`${e.id}-${thisMonth}`]||wd;
+    const basic=Math.round(e.salary/wd*days);
+    const pf=Math.round(basic*0.12);
+    const net=basic-pf;
+    return{...e,days,basic,pf,net};
+  });
+  const conPay=state.contractWorkers.map(w=>{
+    const qty=state.pieceEntries[`${w.id}-${thisMonth}`]||0;
+    const gross=Math.round(qty*(state.pieceRates[w.skill]||0));
+    const topup=Math.max(0,state.minWageTN-gross);
+    return{...w,qty,gross,topup,total:gross+topup};
+  });
+  const staffNet=empPay.reduce((s,e)=>s+e.net,0);
+  const conTotal=conPay.reduce((s,w)=>s+w.total,0);
+  const topupTotal=conPay.reduce((s,w)=>s+w.topup,0);
+
+  return`
+<div style="background:var(--navy);color:#fff;border-radius:12px;padding:1.25rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.25rem">
+  <div><div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase">Month</div><div style="font-size:1rem;font-weight:600;margin-top:3px">${thisMonthName}</div></div>
+  <div><div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase">Staff Net</div><div style="font-size:1.2rem;font-weight:700;color:var(--teal2);margin-top:3px">₹${staffNet.toLocaleString()}</div></div>
+  <div><div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase">Piece Pay + Topup</div><div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:3px">₹${conTotal.toLocaleString()}</div></div>
+  <div><div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase">Grand Total</div><div style="font-size:1.2rem;font-weight:700;margin-top:3px">₹${(staffNet+conTotal).toLocaleString()}</div></div>
+</div>
+${topupTotal>0?`<div class="alert alert-warn"><i class="fa fa-triangle-exclamation"></i> ₹${topupTotal.toLocaleString()} minimum wage topup added to ${conPay.filter(w=>w.topup>0).length} contract workers this month.</div>`:''}
+<div class="tabs">
+  <div class="tab active" onclick="swPay(this,'py-staff','py-con')">Staff Salaries</div>
+  <div class="tab" onclick="swPay(this,'py-con','py-staff')">Contract Payout</div>
+</div>
+<div id="py-staff">
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Dept</th><th>Days</th><th>Basic (₹)</th><th>PF -12%</th><th>Net Pay</th><th>Slip</th></tr></thead>
+    <tbody>
+    ${empPay.map(e=>`<tr>
+      <td style="font-weight:500">${e.name}</td><td>${e.dept}</td>
+      <td style="text-align:center">${e.days}/${wd}</td>
+      <td>₹${e.basic.toLocaleString()}</td>
+      <td style="color:var(--red)">-₹${e.pf.toLocaleString()}</td>
+      <td style="font-weight:700;color:var(--teal)">₹${e.net.toLocaleString()}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="slip('${e.id}')"><i class="fa fa-receipt"></i></button></td>
+    </tr>`).join('')}
+    </tbody>
+    <tfoot><tr><td colspan="5" style="text-align:right">Total:</td><td style="color:var(--teal);font-weight:700">₹${staffNet.toLocaleString()}</td><td></td></tr></tfoot>
+  </table>
+  </div>
+</div>
+<div id="py-con" class="hidden">
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Skill</th><th>Units</th><th>Piece Pay</th><th>Min Wage Topup</th><th>Total Pay</th></tr></thead>
+    <tbody>
+    ${conPay.map(w=>`<tr>
+      <td style="font-weight:500">${w.name}</td>
+      <td><span class="badge badge-blue">${w.skill}</span></td>
+      <td>${w.qty}</td>
+      <td>₹${w.gross.toLocaleString()}</td>
+      <td>${w.topup>0?`<span style="color:var(--orange);font-weight:600">+₹${w.topup.toLocaleString()}</span>`:'—'}</td>
+      <td style="font-weight:700;color:${w.topup>0?'var(--orange)':'var(--teal)'}">₹${w.total.toLocaleString()}</td>
+    </tr>`).join('')}
+    </tbody>
+    <tfoot><tr><td colspan="5" style="text-align:right">Total:</td><td style="color:var(--teal);font-weight:700">₹${conTotal.toLocaleString()}</td></tr></tfoot>
+  </table>
+  </div>
+</div>`;
+}
+
+function swPay(el,show,hide){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  document.getElementById(show).classList.remove('hidden');
+  document.getElementById(hide).classList.add('hidden');
+}
+
+function slip(id){
+  const e=state.employees.find(x=>x.id===id);if(!e)return;
+  const wd=getWorkingDays(2026,5);
+  const days=state.attendance[`${e.id}-${thisMonth}`]||wd;
+  const basic=Math.round(e.salary/wd*days);
+  const pf=Math.round(basic*0.12);
+  const net=basic-pf;
+  showModal(`<div class="modal-header"><div class="modal-title">Payslip — ${thisMonthName}</div><button class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></button></div>
+  <div style="border:2px solid var(--border);border-radius:10px;padding:1.25rem">
+    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;padding-bottom:1rem;border-bottom:2px solid var(--navy)">
+      <div><div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy)">Cottony Textiles</div><div style="font-size:11px;color:var(--muted)">Tirupur, Tamil Nadu</div></div>
+      <div style="text-align:right"><div style="font-size:11px;color:var(--muted)">Payslip</div><div style="font-weight:700">${thisMonthName}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:1rem;font-size:13px">
+      <div><span style="color:var(--muted)">Name:</span> <strong>${e.name}</strong></div>
+      <div><span style="color:var(--muted)">ID:</span> ${e.id}</div>
+      <div><span style="color:var(--muted)">Dept:</span> ${e.dept}</div>
+      <div><span style="color:var(--muted)">Days worked:</span> ${days}/${wd}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div><div style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Earnings</div>
+        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:13px"><span>Basic (${days}d)</span><span>₹${basic.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;font-size:12px;color:var(--muted)"><span>HRA (20%)</span><span>₹${Math.round(basic*0.2).toLocaleString()}</span></div>
+      </div>
+      <div><div style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Deductions</div>
+        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--red)"><span>PF 12%</span><span>-₹${pf.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;font-size:12px;color:var(--muted)"><span>ESI</span><span>₹0</span></div>
+      </div>
+    </div>
+    <div style="background:var(--navy);color:#fff;border-radius:8px;padding:1rem;margin-top:1rem;display:flex;justify-content:space-between">
+      <span style="color:rgba(255,255,255,0.6)">Net Pay</span>
+      <span style="font-size:1.3rem;font-weight:700;color:var(--teal2)">₹${net.toLocaleString()}</span>
+    </div>
+  </div>`);
+}
+
+function renderReports(){
+  const skillTotal={};
+  state.contractWorkers.forEach(w=>{const earn=Math.round((state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0));skillTotal[w.skill]=(skillTotal[w.skill]||0)+earn;});
+  const maxSk=Math.max(...Object.values(skillTotal));
+  const lineEffs=PRODUCTION_LINES.map(l=>{const d=state.productionData[l];const t=d.reduce((s,x)=>s+x.target,0);const a=d.reduce((s,x)=>s+x.actual,0);return{line:l,eff:Math.round(a/t*100)};});
+  const defects=PRODUCTION_LINES.map(l=>{const d=state.productionData[l];return{line:l,total:d.reduce((s,x)=>s+x.defects,0)};});
+  return`
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Piece Pay by Skill — ${thisMonthName}</div>
+    ${Object.entries(skillTotal).sort((a,b)=>b[1]-a[1]).map(([s,v],i)=>{const cols=['var(--navy)','var(--teal)','var(--gold)','var(--red)','#7b1fa2','#1565c0','#2e7d32','#bf360c'];return`<div style="margin-bottom:0.75rem"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:500">${s}</span><span style="font-weight:700;color:var(--teal)">₹${v.toLocaleString()}</span></div><div class="progress-bar"><div style="height:100%;border-radius:3px;background:${cols[i%cols.length]};width:${Math.round(v/maxSk*100)}%"></div></div></div>`;}).join('')}
+  </div>
+  <div class="card">
+    <div class="section-title" style="margin-bottom:1rem">Line Efficiency — Weekly Average</div>
+    ${lineEffs.map(({line,eff})=>{const col=eff>=90?'var(--green)':eff>=70?'var(--orange)':'var(--red)';return`<div style="margin-bottom:0.875rem"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:500">${line.split('–')[0]}</span><span style="font-weight:700;color:${col}">${eff}%</span></div><div class="progress-bar"><div style="height:100%;border-radius:3px;background:${col};width:${eff}%"></div></div></div>`;}).join('')}
+    <div style="margin-top:1rem"><div class="section-title" style="font-size:12px;margin-bottom:0.5rem">Defect Count — This Week</div>${defects.map(({line,total})=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span>${line.split('–')[0]}</span><span style="font-weight:600;color:${total>50?'var(--red)':total>25?'var(--orange)':'var(--green)'}">${total} pcs</span></div>`).join('')}</div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+  <div class="card"><div class="section-title" style="margin-bottom:0.75rem">Leave Summary</div>
+    ${['CL','SL','EL','ML','LWP'].map(t=>{const used=state.leaveRequests.filter(l=>l.type===t&&l.status==='approved').length;return`<div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:13px"><span>${LEAVE_TYPES[t].label}</span><span class="badge ${LEAVE_TYPES[t].color}">${used} used</span></div>`;}).join('')}
+  </div>
+  <div class="card"><div class="section-title" style="margin-bottom:0.75rem">Attendance Summary</div>
+    ${(()=>{const wd=getWorkingDays(2026,5);const full=state.employees.filter(e=>(state.attendance[`${e.id}-${thisMonth}`]||wd)>=wd-1).length;const low=state.employees.filter(e=>(state.attendance[`${e.id}-${thisMonth}`]||wd)<wd-5).length;return`<div style="font-size:13.5px;display:flex;flex-direction:column;gap:0.4rem"><div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Full attendance</span><span class="badge badge-green">${full}</span></div><div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Low attendance</span><span class="badge badge-red">${low}</span></div><div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Holidays this month</span><span>${getHolidaysInMonth(2026,5)}</span></div><div style="display:flex;justify-content:space-between;padding:0.35rem 0"><span style="color:var(--muted)">Working days</span><span>${wd}</span></div></div>`;})()}
+  </div>
+  <div class="card"><div class="section-title" style="margin-bottom:0.75rem">Payroll Summary</div>
+    ${(()=>{const wd=getWorkingDays(2026,5);const staffNet=state.employees.reduce((s,e)=>{const days=state.attendance[`${e.id}-${thisMonth}`]||wd;const basic=Math.round(e.salary/wd*days);return s+basic-Math.round(basic*0.12);},0);const conTotal=state.contractWorkers.reduce((s,w)=>s+Math.max(state.minWageTN,Math.round((state.pieceEntries[`${w.id}-${thisMonth}`]||0)*(state.pieceRates[w.skill]||0))),0);return`<div style="font-size:13.5px;display:flex;flex-direction:column;gap:0.4rem"><div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Staff net pay</span><span style="font-weight:600;color:var(--teal)">₹${staffNet.toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Contract payout</span><span style="font-weight:600;color:var(--gold)">₹${conTotal.toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;padding:0.35rem 0"><span style="color:var(--muted)">Grand total</span><span style="font-weight:700;color:var(--navy)">₹${(staffNet+conTotal).toLocaleString()}</span></div></div>`;})()}
+  </div>
+</div>`;
+}
+
+function switchTab2(el,...ids){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  ids.forEach((id,i)=>document.getElementById(id)&&document.getElementById(id).classList.toggle('hidden',i!==0));
+}
+
+function showModal(html){document.getElementById('modal-body').innerHTML=html;document.getElementById('modal-overlay').classList.remove('hidden');}
+function closeModal(){document.getElementById('modal-overlay').classList.add('hidden');document.getElementById('modal-body').innerHTML='';}
+document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+navigate('dashboard');
+updateBadge();
+</script>
+</body>
+</html>
